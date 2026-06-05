@@ -29,9 +29,34 @@ public final class Beregning {
 
     public static Resultat beregn(List<Integer> sisteTreManeder, int aarsinntekt, int grunnbeloep) {
         // TODO
-        throw new UnsupportedOperationException("Oppgave 2 — ikke implementert ennå");
+        if (sisteTreManeder == null || sisteTreManeder.isEmpty()) {
+            return new Resultat.Grunnlag(0);
+        }
+        // Snitt av <strong>siste 3 måneders inntekt</strong>, oppjustert
+        // *      til årssats (× 12).
+            int sumTreManeder = 0;
+            for (int mndBeloep : sisteTreManeder) {
+            sumTreManeder += mndBeloep;
+        }
+            int snittAarsats = sumTreManeder * 4;
+    //Hvis snitt-årssatsen avviker mer enn <strong>25%</strong> fra
+        // *      søkers oppgitte årsinntekt, skal saken vurderes manuelt
+        // *      (NAV bestemmer hva som er mest representativt).
+        if (aarsinntekt > 0) {
+            int avvik = Math.abs(snittAarsats - aarsinntekt);
+        if (avvik > (aarsinntekt * 0.25)) {
+            return new Resultat.ManuellVurdering("Mer enn 25% avvik.");
+        }
     }
+       // Ellers brukes snitt-årssatsen som grunnlag, men <strong>kappet ved 6G</strong> (seks ganger grunnbeløpet)
+        int maksGrunnlag = 6 * grunnbeloep;
+        int endeligBeloep = snittAarsats;
+        if (endeligBeloep > maksGrunnlag) {
+            endeligBeloep = maksGrunnlag;
+        }
 
+        return new Resultat.Grunnlag(endeligBeloep);
+    }
     public sealed interface Resultat permits Resultat.Grunnlag, Resultat.ManuellVurdering {
         record Grunnlag(int beloep) implements Resultat {}
         record ManuellVurdering(String grunn) implements Resultat {}

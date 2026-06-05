@@ -22,21 +22,32 @@ public record Beloep(int kroner) {
 
     public static Beloep av(int kroner) {
         // TODO
-        throw new UnsupportedOperationException("Oppgave 3 — ikke implementert ennå");
+        if (kroner < 0) {
+            throw new IllegalArgumentException("Beløp kan ikke være negativt: " + kroner);
+        }
+        return new Beloep(kroner);
     }
 
     public Beloep pluss(Beloep annet) {
         // TODO
-        throw new UnsupportedOperationException("Oppgave 3 — ikke implementert ennå");
+        if (annet == null) {
+            return this;
+        }
+        return new Beloep(this.kroner + annet.kroner());
     }
 
     public Beloep prosentAv(int prosent) {
         // TODO
-        throw new UnsupportedOperationException("Oppgave 3 — ikke implementert ennå");
+        int regnetBeloep = (this.kroner * prosent) / 100;
+        return Beloep.av(regnetBeloep);
     }
 
     public Beloep kapp(Beloep tak) {
         // TODO
-        throw new UnsupportedOperationException("Oppgave 3 — ikke implementert ennå");
+        if (tak == null) {
+            return this;
+        }
+        int minsteKroner = Math.min(this.kroner, tak.kroner());
+        return new Beloep(minsteKroner);
     }
-}
+    }

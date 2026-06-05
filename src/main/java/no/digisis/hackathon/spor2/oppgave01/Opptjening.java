@@ -1,6 +1,8 @@
 package no.digisis.hackathon.spor2.oppgave01;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Oppgave 1 — Opptjeningskrav for foreldrepenger (20 poeng)
@@ -27,11 +29,32 @@ import java.util.List;
  */
 public final class Opptjening {
 
-    private Opptjening() {}
+    private Opptjening() {
+
+    }
 
     public static boolean harOpptjening(List<Inntektsregistrering> historikk, int halvG) {
         // TODO
-        throw new UnsupportedOperationException("Oppgave 1 — ikke implementert ennå");
+        if (historikk == null || historikk.isEmpty()) {
+            return false;
+        }
+        Set<String> godkjenteMonths = new HashSet<>();
+        int totalGodkjentBelop = 0;
+
+        for (Inntektsregistrering registrering : historikk) {
+            InntektsType type = registrering.type();
+
+
+            if (type != InntektsType.FERIEPENGER && type != InntektsType.LANEKASSEN) {
+
+                godkjenteMonths.add(registrering.maaned());
+
+                totalGodkjentBelop += registrering.beloep();
+            }
+        }
+        return godkjenteMonths.size() >= 6 && totalGodkjentBelop >= halvG;
+
+
     }
 
     public record Inntektsregistrering(String maaned, InntektsType type, int beloep) {}
@@ -48,3 +71,4 @@ public final class Opptjening {
         LANEKASSEN
     }
 }
+

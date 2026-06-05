@@ -1,5 +1,7 @@
 package no.digisis.hackathon.spor2.oppgave04;
 
+import no.digisis.hackathon.spor2.oppgave03.Beloep;
+
 /**
  * Oppgave 4 — Saksstatus-tilstandsmaskin (20 poeng)
  *
@@ -27,6 +29,26 @@ public final class Saksbehandling {
 
     public static Saksstatus neste(Saksstatus status, Hendelse hendelse) {
         // TODO
-        throw new UnsupportedOperationException("Oppgave 4 — ikke implementert ennå");
+
+        if (status instanceof Saksstatus.Mottatt) {
+
+            if (hendelse instanceof Hendelse.StartBehandling h) {
+                return new Saksstatus.UnderBehandling(h.saksbehandler());
+            }
+        }
+
+        else if (status instanceof Saksstatus.UnderBehandling) {
+
+            if (hendelse instanceof Hendelse.FattVedtak h) {
+                return new Saksstatus.Vedtak(h.utfall());
+            }
+
+            if (hendelse instanceof Hendelse.Avvis h) {
+                return new Saksstatus.Avvist(h.grunn());
+            }
+        }
+
+
+        throw new IllegalStateException("Try again");
     }
 }
